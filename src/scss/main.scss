@@ -5,33 +5,4 @@
 @import 'utils/reset';
 
 //pages
-@import '../views/pages/**/*.scss';
-
-// global rules
-html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-}
-
-button {
-  padding: 0;
-  background-color: transparent;
-}
-
-.is-modal-open {
-  overflow-y: hidden;
-}
-
-.overflow-scroll {
-  width: 100%;
-  margin: 0;
-
-  @include media-breakpoint-down('md') {
-    overflow-x: scroll;
-  }
-}
-
-.black-bg {
-  position: relative;
-  background-color: rgba($color: #181028, $alpha: 0.8);
-}
+@import '../views/pages/index';
