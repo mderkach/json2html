@@ -1,0 +1,72 @@
+{
+  "data": {
+      "type": "div",
+      "class": "BLYAT",
+      "children":[
+        {
+          "type": "table",
+          "children": [
+            {
+              "type": "head",
+              "children": [
+                {
+                  "type": "row",
+                  "children": [
+                    {
+                      "type": "col",
+                      "text": "Test 1"
+                    },
+                    {
+                      "type": "col",
+                      "text": "Test 2"
+                    },
+                    {
+                      "type": "col",
+                      "text": "Test 3"
+                    }
+                  ]
+                }
+              ]
+            },
+
+            {
+              "type": "body",
+              "children": [
+                {
+                  "type": "row",
+                  "children": [
+                    {
+                      "type": "col",
+                      "text": "Test 4"
+                    },
+                    {
+                      "type": "col",
+                      "text": "Test 5"
+                    },
+                    {
+                      "type": "col",
+                      "text": "Test 6"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "form",
+          "children": [
+            {
+              "type": "input",
+              "label": "АПИСАНИЙЕ",
+              "name": "some"
+            },
+            {
+              "type": "submit",
+              "label": "Отправить"
+            }
+          ]
+        }
+      ]
+  }
+}

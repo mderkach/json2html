@@ -1,0 +1,51 @@
+.h1 {
+  font-weight: 900;
+  font-size: rem(96);
+  line-height: $mainLineHeight;
+  text-transform: uppercase;
+
+  @include media-breakpoint-down(md) {
+    font-size: rem(75);
+    line-height: $mainLineHeight;
+  }
+}
+
+.h2 {
+  font-weight: 900;
+  font-size: rem(30);
+  line-height: $mainLineHeight;
+  text-transform: uppercase;
+  color: $white;
+}
+
+.text {
+  &-link {
+    font-size: rem(14);
+    line-height: $mainLineHeight;
+    text-align: center;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+}
+
+.p {
+  font-size: rem(14);
+  line-height: $mainLineHeight;
+  color: $white;
+}
+
+.shadow-red {
+  text-shadow: -8px -3px 0px $shadow2;
+}
+
+.shadow-blue {
+  text-shadow: 7px 6px 0px $shadow1;
+}
+
+.shadow-multiple {
+  text-shadow: 7px 6px 0px $shadow1, -8px -3px 0px $shadow2;
+}
+
+.inherit {
+  font-size: inherit;
+}
