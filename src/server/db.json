@@ -1,7 +1,7 @@
 {
   "data": {
       "type": "div",
-      "class": "BLYAT",
+      "class": "bg-white p-4",
       "children":[
 
         {
@@ -12,19 +12,22 @@
               "id": "tab1",
               "href": "tab-pane1",
               "active": true,
-              "text": "Tab 1"
+              "text": "Tab 1",
+              "width": "30%"
             },
             {
               "type": "tab",
               "id": "tab2",
               "href": "tab-pane2",
-              "text": "Tab 2"
+              "text": "Tab 2",
+              "width": "30%"
             },
             {
               "type": "tab",
               "id": "tab3",
               "href": "tab-pane3",
-              "text": "Tab 3"
+              "text": "Tab 3",
+              "width": "30%"
             }
           ]
         },
@@ -63,15 +66,18 @@
                   "children": [
                     {
                       "type": "col",
-                      "html": "Test 1<b>TEst2"
+                      "html": "Test 1<b>TEst2",
+                      "width": "30%"
                     },
                     {
                       "type": "col",
-                      "text": "Test 2"
+                      "text": "Test 2",
+                      "width": "30%"
                     },
                     {
                       "type": "col",
-                      "text": "Test 3"
+                      "text": "Test 3",
+                      "width": "5%"
                     }
                   ]
                 }
@@ -94,7 +100,16 @@
                     },
                     {
                       "type": "col",
-                      "text": "Test 6"
+                      "children": [
+                        {
+                          "id": "MY_MEGA_BUTTON",
+                          "type": "submit",
+                          "modifier": "success",
+                          "size": "large",
+                          "text": "Отправить",
+                          "target": "http://forms/onSubmit"
+                        }
+                      ]
                     }
                   ]
                 }
@@ -108,14 +123,6 @@
             {
               "type": "button-group",
               "children": [
-                {
-                  "id": "MY_MEGA_BUTTON",
-                  "type": "submit",
-                  "modifier": "success",
-                  "size": "large",
-                  "text": "Отправить",
-                  "target": "http://forms/onSubmit"
-                },
                 {
                   "type": "button",
                   "modifier": "danger",

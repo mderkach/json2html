@@ -8,7 +8,7 @@ import 'bootstrap';
 global.jQuery = $;
 global.$ = $;
 
-const BASE_URI = 'http://localhost:4000';
+const BASE_URI = 'http://192.168.1.131:4000';
 
 const html = {
   wrapEl: document.querySelector('#content'),
@@ -136,6 +136,17 @@ const html = {
     }
 
     if (data.id) AnyElem.id = data.id;
+    if (data.class) {
+      data.class.split(' ').forEach((c) => AnyElem.classList.add(c));
+    }
+
+    if (data.width) {
+      AnyElem.style.width = data.width;
+    }
+
+    if (data.height) {
+      AnyElem.style.height = data.height;
+    }
 
     if (!data.children && allowText) {
       if (data.html) {
