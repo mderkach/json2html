@@ -1,9 +1,9 @@
 const Webpack = require('webpack');
-const Merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const BaseWebpackConfig = require('./webpack.base.conf');
 
-const devWebpackConfig = Merge(BaseWebpackConfig, {
+const devWebpackConfig = merge(BaseWebpackConfig, {
 	// DEV config
 	mode: 'development',
 	devtool: 'cheap-module-eval-source-map',

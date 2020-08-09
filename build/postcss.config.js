@@ -7,11 +7,9 @@
 const autoprefixer = require('autoprefixer');
 const mqpacker = require('css-mqpacker');
 const cssnano = require('cssnano');
-const moveProps = require('postcss-move-props-to-bg-image-query');
 
 module.exports = {
   plugins: [
-    moveProps(),
     autoprefixer,
     mqpacker,
     cssnano({
