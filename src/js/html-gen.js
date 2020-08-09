@@ -1,8 +1,14 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable prefer-destructuring */
 import axios from 'axios';
+import $ from 'jquery';
 
-const BASE_URI = 'http://192.168.1.131:4000';
+import 'bootstrap';
+
+global.jQuery = $;
+global.$ = $;
+
+const BASE_URI = 'http://localhost:4000';
 
 const html = {
   wrapEl: document.querySelector('#content'),
@@ -70,20 +76,22 @@ const html = {
   },
 
   renderTab: function (childs, data) {
-    const tabWr = this.renderAny(childs, data, 'li', true, true);
+    const tabWr = this.renderAny(childs, data, 'li', true, false);
     tabWr.classList.add('nav-item');
     const a = document.createElement('a');
     a.classList.add('nav-link');
 
+    a.setAttribute('href', `#${data.href}`);
+    a.setAttribute('data-toggle', 'tab');
+    a.setAttribute('role', 'tab');
+    a.setAttribute('aria-selected', false);
+    a.setAttribute('aria-controls', data.href);
+    a.setAttribute('data-height', true);
+    a.innerHTML = data.text;
+
     if (data.active) {
       a.classList.add('active');
-    }
-
-    if (data.id) {
-      a.setAttribute('href', `#${data.id}`);
-      a.setAttribute('data-toggle', 'tab');
-      a.setAttribute('role', 'tab');
-      a.setAttribute('data-height', true);
+      a.setAttribute('aria-selected', true);
     }
 
     tabWr.appendChild(a);
@@ -103,9 +111,11 @@ const html = {
     tabContentWr.classList.add('tab-pane');
     tabContentWr.classList.add('fade');
     tabContentWr.setAttribute('role', 'tabpanel');
+    tabContentWr.setAttribute('aria-labelledby', `${data.id}-tab`);
 
     if (data.active) {
       tabContentWr.classList.add('active');
+      tabContentWr.classList.add('show');
     }
 
     return tabContentWr;

@@ -10,17 +10,20 @@
             {
               "type": "tab",
               "id": "tab1",
+              "href": "tab-pane1",
               "active": true,
               "text": "Tab 1"
             },
             {
               "type": "tab",
               "id": "tab2",
+              "href": "tab-pane2",
               "text": "Tab 2"
             },
             {
               "type": "tab",
               "id": "tab3",
+              "href": "tab-pane3",
               "text": "Tab 3"
             }
           ]
@@ -31,20 +34,18 @@
           "children": [
             {
               "type": "tab-pane",
-              "id": "tab1",
-              "active": true,
-              "text": "fjskldrghaejrlgharesgjl awdngegdaj ehng jn rjgreg ; rgh"
+              "id": "tab-pane1",
+              "text": "fjskldrghaejrlgharesgjl awdngegdaj ehng jn rjgreg ; rgh",
+              "active": true
             },
             {
               "type": "tab-pane",
-              "id": "tab2",
-              "active": true,
+              "id": "tab-pane2",
               "text": "Lorem ipsum dolor sit amet"
             },
             {
               "type": "tab-pane",
-              "id": "tab3",
-              "active": true,
+              "id": "tab-pane3",
               "text": "ABCDEFG"
             }
           ]
