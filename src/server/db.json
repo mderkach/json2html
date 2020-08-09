@@ -71,7 +71,8 @@
                   "modifier": "danger",
                   "size": "small",
                   "disabled": true,
-                  "text": "Что-то ещё"
+                  "text": "Что-то ещё",
+                  "action": "http://vuecraft/craftItemNUI"
                 }
               ]
             },

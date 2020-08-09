@@ -46,7 +46,7 @@ module.exports = {
         options: {
           name: 'fonts/[name].[ext]',
           outputPath: `${PATHS.assets}`,
-          publicPath: './',
+          publicPath: '../',
         },
       },
       {

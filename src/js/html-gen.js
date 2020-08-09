@@ -63,6 +63,8 @@ const html = {
       }
     }
 
+    if (data.id) AnyElem.id = data.id;
+
     if (!data.children && allowText) {
       if (data.html) {
         AnyElem.innerHTML = data.html;
@@ -99,8 +101,8 @@ const html = {
   renderInput: function (childs, data) {
     const formInp = this.renderAny(childs, data, 'input', false, false);
     formInp.className = 'form-control';
+    if (data.name) formInp.name = data.name;
     formInp.setAttribute('type', 'text');
-    formInp.setAttribute('id', data.name);
 
     // text
     if (data.text) {
@@ -151,6 +153,15 @@ const html = {
 
     Btn.innerHTML = data.text;
 
+    Btn.addEventListener('click', (e) => {
+      // e.preventDefault();
+      const self = Btn;
+      console.log('self:', self);
+      console.log('event is:', e);
+      console.log('data:', data);
+      this.postData(data.target, data);
+    });
+
     return Btn;
   },
   renderButtonGroup: function (childs, data) {
@@ -166,6 +177,11 @@ const html = {
     }
 
     return BtnGrp;
+  },
+  postData: (target, data) => {
+    axios.post(target, JSON.stringify(data)).then(function (response) {
+      console.log(response);
+    });
   },
   init: function () {
     if (html.wrapEl) {
