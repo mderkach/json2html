@@ -2,7 +2,7 @@
 /* eslint-disable prefer-destructuring */
 import axios from 'axios';
 
-const BASE_URI = 'http://localhost:4000';
+const BASE_URI = 'http://192.168.1.131:4000';
 
 const html = {
   wrapEl: document.querySelector('#content'),
@@ -45,10 +45,72 @@ const html = {
         return html.renderButton(temp, data, 'reset');
       case 'button-group':
         return html.renderButtonGroup(temp, data);
+
+      case 'tabs':
+        return html.renderTabs(temp, data);
+      case 'tab':
+        return html.renderTab(temp, data);
+      case 'tab-content':
+        return html.renderTabContent(temp, data);
+      case 'tab-pane':
+        return html.renderTabPane(temp, data);
+
       default:
         return html.renderAny(temp, data, 'unknown');
     }
   },
+
+  renderTabs: function (childs, data) {
+    const tabsWr = this.renderAny(childs, data, 'ul', true, false);
+    tabsWr.classList.add('nav');
+    tabsWr.classList.add('nav-tabs');
+    tabsWr.setAttribute('role', 'tablist');
+
+    return tabsWr;
+  },
+
+  renderTab: function (childs, data) {
+    const tabWr = this.renderAny(childs, data, 'li', true, true);
+    tabWr.classList.add('nav-item');
+    const a = document.createElement('a');
+    a.classList.add('nav-link');
+
+    if (data.active) {
+      a.classList.add('active');
+    }
+
+    if (data.id) {
+      a.setAttribute('href', `#${data.id}`);
+      a.setAttribute('data-toggle', 'tab');
+      a.setAttribute('role', 'tab');
+      a.setAttribute('data-height', true);
+    }
+
+    tabWr.appendChild(a);
+
+    return tabWr;
+  },
+
+  renderTabContent: function (childs, data) {
+    const tabContentWr = this.renderAny(childs, data, 'div', true, false);
+    tabContentWr.classList.add('tab-content');
+
+    return tabContentWr;
+  },
+
+  renderTabPane: function (childs, data) {
+    const tabContentWr = this.renderAny(childs, data, 'div', true, true);
+    tabContentWr.classList.add('tab-pane');
+    tabContentWr.classList.add('fade');
+    tabContentWr.setAttribute('role', 'tabpanel');
+
+    if (data.active) {
+      tabContentWr.classList.add('active');
+    }
+
+    return tabContentWr;
+  },
+
   renderAny: function (childs, data, tag, allowChilden, allowText) {
     const AnyElem = document.createElement(tag);
 
@@ -179,6 +241,7 @@ const html = {
     return BtnGrp;
   },
   postData: (target, data) => {
+    console.log(JSON.stringify(target));
     axios.post(target, JSON.stringify(data)).then(function (response) {
       console.log(response);
     });
