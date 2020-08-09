@@ -19,67 +19,95 @@ const html = {
 
     switch (type) {
       case 'table':
-        return html.renderTable(temp);
+        return html.renderTable(temp, data);
       case 'head':
-        return html.renderRow(temp, data, 'thead');
+        return html.renderAny(temp, data, 'thead');
       case 'row':
-        return html.renderRow(temp, data, 'tr');
+        return html.renderAny(temp, data, 'tr');
+      case 'col':
+        return html.renderAny(temp, data, 'td');
       case 'body':
-        return html.renderRow(temp, data, 'tbody');
+        return html.renderAny(temp, data, 'tbody');
       case 'div':
-        return html.renderRow(temp, data, 'div');
+        return html.renderAny(temp, data, 'div');
+      case 'span':
+      case 'text':
+        return html.renderAny(temp, data, 'span');
       case 'form':
         return html.renderForm(temp, data);
       case 'input':
         return html.renderInput(temp, data);
+      case 'button':
+        return html.renderButton(temp, data, 'button');
       case 'submit':
-        return html.renderSubmit(temp, data);
+        return html.renderButton(temp, data, 'submit');
+      case 'reset':
+        return html.renderButton(temp, data, 'reset');
+      case 'button-group':
+        return html.renderButtonGroup(temp, data);
       default:
-        return html.renderCell(temp, data);
+        return html.renderAny(temp, data, 'unknown');
     }
+  },
+  renderAny: function (childs, data, tag, allowChilden, allowText) {
+    const AnyElem = document.createElement(tag);
+
+    // eslint-disable-next-line no-param-reassign
+    if (allowChilden === undefined) allowChilden = true;
+    // eslint-disable-next-line no-param-reassign
+    if (allowText === undefined) allowText = true;
+
+    if (data.children && allowChilden) {
+      for (let i = 0; i < childs.length; i += 1) {
+        AnyElem.appendChild(childs[i]);
+      }
+    }
+
+    if (!data.children && allowText) {
+      if (data.html) {
+        AnyElem.innerHTML = data.html;
+      } else if (data.text) {
+        AnyElem.innerText = data.text;
+      }
+    }
+
+    return AnyElem;
   },
   renderTable: function (childs, data) {
-    const tableWr = document.createElement('table');
-    tableWr.className = 'table table-dark';
+    const TableWr = this.renderAny(childs, data, 'table', true, false);
+    TableWr.classList.add('table');
 
-    for (let i = 0; i < childs.length; i += 1) {
-      tableWr.appendChild(childs[i]);
-    }
+    // class
+    if (data.class) TableWr.classList.add(data.class);
 
-    return tableWr;
-  },
-  renderRow: function (childs, data, nodeType) {
-    const tableR = document.createElement(nodeType);
+    // dark
+    if (data.dark) TableWr.classList.add('table-dark');
 
-    if (data.class) tableR.className = data.class;
-    for (let i = 0; i < childs.length; i += 1) {
-      tableR.appendChild(childs[i]);
-    }
-
-    return tableR;
-  },
-  renderCell: function (childs, data) {
-    const tableC = document.createElement('td');
-    tableC.setAttribute('scope', data.type);
-    tableC.innerHTML = data.text;
-
-    return tableC;
+    return TableWr;
   },
   renderForm: function (childs, data) {
-    const formWr = document.createElement('form');
+    const formWr = this.renderAny(childs, data, 'form', true, false);
 
-    for (let i = 0; i < childs.length; i += 1) {
-      formWr.appendChild(childs[i]);
-    }
+    // name
+    if (data.name) formWr.setAttribute('name', data.name);
+
+    // action
+    if (data.action) formWr.setAttribute('action', data.action);
 
     return formWr;
   },
   renderInput: function (childs, data) {
-    const formInp = document.createElement('input');
+    const formInp = this.renderAny(childs, data, 'input', false, false);
     formInp.className = 'form-control';
     formInp.setAttribute('type', 'text');
     formInp.setAttribute('id', data.name);
 
+    // text
+    if (data.text) {
+      formInp.value = data.text;
+    }
+
+    // label
     if (data.label) {
       const group = document.createElement('div');
       group.className = 'form-group';
@@ -96,13 +124,48 @@ const html = {
 
     return formInp;
   },
-  renderSubmit: function (childs, data) {
-    const formSub = document.createElement('button');
-    formSub.className = 'btn btn-primary';
-    formSub.setAttribute('type', 'submit');
-    formSub.innerHTML = data.label;
+  renderButton: function (childs, data, type) {
+    const Btn = this.renderAny(childs, data, 'button', false, false);
+    Btn.classList.add('btn');
+    // type
+    Btn.setAttribute('type', type);
 
-    return formSub;
+    // size
+    if (data.size === 'small') {
+      Btn.classList.add('btn-sm');
+    } else if (data.size === 'large') {
+      Btn.classList.add('btn-lg');
+    }
+
+    // modifier
+    if (data.modifier) {
+      Btn.classList.add(`btn-${data.modifier}`);
+    } else {
+      Btn.classList.add('btn-primary');
+    }
+
+    // disabled
+    if (data.disabled) {
+      Btn.setAttribute('disabled', 'disabled');
+    }
+
+    Btn.innerHTML = data.text;
+
+    return Btn;
+  },
+  renderButtonGroup: function (childs, data) {
+    const BtnGrp = this.renderAny(childs, data, 'div', true, false);
+    BtnGrp.classList.add('btn-group');
+    BtnGrp.setAttribute('role', 'group');
+
+    // class
+    if (data.class) BtnGrp.classList.add(data.class);
+
+    for (let i = 0; i < childs.length; i += 1) {
+      BtnGrp.appendChild(childs[i]);
+    }
+
+    return BtnGrp;
   },
   init: function () {
     if (html.wrapEl) {

@@ -5,6 +5,7 @@
       "children":[
         {
           "type": "table",
+          "dark": true,
           "children": [
             {
               "type": "head",
@@ -14,7 +15,7 @@
                   "children": [
                     {
                       "type": "col",
-                      "text": "Test 1"
+                      "html": "Test 1<b>TEst2"
                     },
                     {
                       "type": "col",
@@ -57,13 +58,28 @@
           "type": "form",
           "children": [
             {
-              "type": "input",
-              "label": "АПИСАНИЙЕ",
-              "name": "some"
+              "type": "button-group",
+              "children": [
+                {
+                  "type": "submit",
+                  "modifier": "success",
+                  "size": "large",
+                  "text": "Отправить"
+                },
+                {
+                  "type": "button",
+                  "modifier": "danger",
+                  "size": "small",
+                  "disabled": true,
+                  "text": "Что-то ещё"
+                }
+              ]
             },
             {
-              "type": "submit",
-              "label": "Отправить"
+              "type": "input",
+              "label": "АПИСАНИЙЕ",
+              "name": "some",
+              "text": "АБВ"
             }
           ]
         }
