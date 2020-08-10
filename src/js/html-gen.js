@@ -2,25 +2,21 @@
 /* eslint-disable prefer-destructuring */
 import axios from 'axios';
 import $ from 'jquery';
-
 import 'bootstrap';
 
 global.jQuery = $;
 global.$ = $;
 
-const BASE_URI = 'http://localhost:4000';
-
 const html = {
   templates: {},
-  wrapEl: document.querySelector('#content'),
-  parser: function (data) {
+  parse: function (data) {
     const type = data.type;
     const children = data.children;
     const temp = [];
 
     if (children) {
       for (let i = 0; i < children.length; i += 1) {
-        temp.push(html.parser(children[i]));
+        temp.push(html.parse(children[i]));
       }
     }
 
@@ -384,7 +380,7 @@ const html = {
         if (this.templates[key]) return;
 
         if (key !== 'index') {
-          this.templates[key] = html.parser(val);
+          this.templates[key] = html.parse(val);
           changed = true;
         }
       } catch (err) {
@@ -402,48 +398,13 @@ const html = {
       if (!this.processTemplates(json)) break;
     }
 
-    const index = html.parser(json.index);
-    html.wrapEl.innerHTML = '';
-    html.wrapEl.appendChild(index);
+    return html.parse(json.index);
   },
 
   postData: (target, data) => {
     axios.post(target, JSON.stringify(data)).then(function (response) {
       //      console.log(response);
     });
-  },
-
-  init_debug: function () {
-    html.wrapEl.innerHTML = '';
-
-    axios
-      .get(`${BASE_URI}/db`)
-      .then((res) => {
-        const event = new CustomEvent('message');
-        event.data = { show: true, json: JSON.stringify(res.data) };
-
-        window.dispatchEvent(event);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  },
-
-  init: function () {
-    window.addEventListener('message', function (event) {
-      const data = event.data;
-
-      if (data.show) {
-        html.wrapEl.innerHTML = '';
-        html.processJson(JSON.parse(data.json));
-      }
-
-      if (data.hide) {
-        html.wrapEl.innerHTML = '';
-      }
-    });
-
-    this.init_debug();
   },
 };
 
