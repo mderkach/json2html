@@ -8,9 +8,10 @@ import 'bootstrap';
 global.jQuery = $;
 global.$ = $;
 
-const BASE_URI = 'http://192.168.1.131:4000';
+const BASE_URI = 'http://localhost:4000';
 
 const html = {
+  templates: {},
   wrapEl: document.querySelector('#content'),
   parser: function (data) {
     const type = data.type;
@@ -24,21 +25,24 @@ const html = {
     }
 
     switch (type) {
+      // tables
       case 'table':
         return html.renderTable(temp, data);
       case 'head':
-        return html.renderAny(temp, data, 'thead');
+        return html.renderHead(temp, data, 'thead');
       case 'row':
         return html.renderAny(temp, data, 'tr');
       case 'col':
         return html.renderAny(temp, data, 'td');
       case 'body':
         return html.renderAny(temp, data, 'tbody');
+      // basic elements
       case 'div':
         return html.renderAny(temp, data, 'div');
       case 'span':
       case 'text':
         return html.renderAny(temp, data, 'span');
+      // forms
       case 'form':
         return html.renderForm(temp, data);
       case 'input':
@@ -51,7 +55,7 @@ const html = {
         return html.renderButton(temp, data, 'reset');
       case 'button-group':
         return html.renderButtonGroup(temp, data);
-
+      // tabs
       case 'tabs':
         return html.renderTabs(temp, data);
       case 'tab':
@@ -60,6 +64,11 @@ const html = {
         return html.renderTabContent(temp, data);
       case 'tab-pane':
         return html.renderTabPane(temp, data);
+      // misc
+      case 'card':
+        return html.renderCard(temp, data);
+      case 'ref':
+        return html.renderRef(temp, data);
 
       default:
         return html.renderAny(temp, data, 'unknown');
@@ -109,7 +118,7 @@ const html = {
   renderTabPane: function (childs, data) {
     const tabContentWr = this.renderAny(childs, data, 'div', true, true);
     tabContentWr.classList.add('tab-pane');
-    tabContentWr.classList.add('fade');
+    //    tabContentWr.classList.add('fade');
     tabContentWr.setAttribute('role', 'tabpanel');
     tabContentWr.setAttribute('aria-labelledby', `${data.id}-tab`);
 
@@ -121,15 +130,27 @@ const html = {
     return tabContentWr;
   },
 
-  renderAny: function (childs, data, tag, allowChilden, allowText) {
+  renderHead: function (childs, data) {
+    const TableWr = this.renderAny(childs, data, 'thead', true, false);
+
+    // dark
+    if (data.dark) TableWr.classList.add('thead-dark');
+
+    return TableWr;
+  },
+
+  renderRef: function (childs, data) {
+    if (this.templates[data.name]) {
+      return this.templates[data.name];
+    }
+
+    throw Error(`Template ${data.name} not initialized!`);
+  },
+
+  renderAny: function (childs, data, tag, allowChildren, allowText) {
     const AnyElem = document.createElement(tag);
 
-    // eslint-disable-next-line no-param-reassign
-    if (allowChilden === undefined) allowChilden = true;
-    // eslint-disable-next-line no-param-reassign
-    if (allowText === undefined) allowText = true;
-
-    if (data.children && allowChilden) {
+    if (data.children && (allowChildren || allowChildren === undefined)) {
       for (let i = 0; i < childs.length; i += 1) {
         AnyElem.appendChild(childs[i]);
       }
@@ -148,7 +169,7 @@ const html = {
       AnyElem.style.height = data.height;
     }
 
-    if (!data.children && allowText) {
+    if (!data.children && (allowText || allowText === undefined)) {
       if (data.html) {
         AnyElem.innerHTML = data.html;
       } else if (data.text) {
@@ -158,12 +179,45 @@ const html = {
 
     return AnyElem;
   },
+
+  renderCard: function (childs, data) {
+    const CardWr = this.renderAny(childs, data, 'card', false, false);
+    CardWr.classList.add('card');
+
+    if (data.title) {
+      const header = document.createElement('h5');
+      header.classList.add('card-header');
+      const headerText = document.createElement('span');
+      headerText.innerHTML = data.title;
+      const closeButton = document.createElement('button');
+      closeButton.setAttribute('type', 'button');
+      closeButton.classList.add('close');
+      closeButton.innerHTML = '&times;';
+      header.appendChild(headerText);
+      headerText.appendChild(closeButton);
+      CardWr.appendChild(header);
+
+      closeButton.addEventListener('click', () => {
+        this.postData('http://forms/onClose', {});
+      });
+    }
+
+    const body = document.createElement('div');
+    body.classList.add('card-body');
+
+    if (data.children) {
+      for (let i = 0; i < childs.length; i += 1) {
+        body.appendChild(childs[i]);
+      }
+    }
+
+    CardWr.appendChild(body);
+
+    return CardWr;
+  },
   renderTable: function (childs, data) {
     const TableWr = this.renderAny(childs, data, 'table', true, false);
     TableWr.classList.add('table');
-
-    // class
-    if (data.class) TableWr.classList.add(data.class);
 
     // dark
     if (data.dark) TableWr.classList.add('table-dark');
@@ -238,10 +292,6 @@ const html = {
 
     Btn.addEventListener('click', (e) => {
       // e.preventDefault();
-      const self = Btn;
-      console.log('self:', self);
-      console.log('event is:', e);
-      console.log('data:', data);
       this.postData(data.target, data);
     });
 
@@ -252,33 +302,83 @@ const html = {
     BtnGrp.classList.add('btn-group');
     BtnGrp.setAttribute('role', 'group');
 
-    // class
-    if (data.class) BtnGrp.classList.add(data.class);
-
     for (let i = 0; i < childs.length; i += 1) {
       BtnGrp.appendChild(childs[i]);
     }
 
     return BtnGrp;
   },
+
+  processTemplates: function (json) {
+    let changed = false;
+    Object.entries(json).forEach((entry) => {
+      try {
+        const key = entry[0];
+        const val = entry[1];
+
+        if (this.templates[key]) return;
+
+        if (key !== 'index') {
+          this.templates[key] = html.parser(val);
+          changed = true;
+        }
+      } catch (err) {
+        /* do nothing */
+      }
+    });
+
+    return changed;
+  },
+
+  processJson: function (json) {
+    this.templates = {};
+
+    for (let i = 0; i < 10; i += 1) {
+      if (!this.processTemplates(json)) break;
+    }
+
+    const index = html.parser(json.index);
+    html.wrapEl.innerHTML = '';
+    html.wrapEl.appendChild(index);
+  },
+
   postData: (target, data) => {
-    console.log(JSON.stringify(target));
     axios.post(target, JSON.stringify(data)).then(function (response) {
-      console.log(response);
+      //      console.log(response);
     });
   },
+
+  init_debug: function () {
+    html.wrapEl.innerHTML = '';
+
+    axios
+      .get(`${BASE_URI}/db`)
+      .then((res) => {
+        const event = new CustomEvent('message');
+        event.data = { show: true, json: JSON.stringify(res.data) };
+
+        window.dispatchEvent(event);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },
+
   init: function () {
-    if (html.wrapEl) {
-      if (html.wrapEl.firstChild) {
-        this.wrapEl.childNodes.forEach((child) => {
-          child.remove();
-        });
-      } else {
-        axios.get(`${BASE_URI}/data`).then((res) => {
-          html.wrapEl.appendChild(html.parser(res.data));
-        });
+    window.addEventListener('message', function (event) {
+      const data = event.data;
+
+      if (data.show) {
+        html.wrapEl.innerHTML = '';
+        html.processJson(JSON.parse(data.json));
       }
-    }
+
+      if (data.hide) {
+        html.wrapEl.innerHTML = '';
+      }
+    });
+
+    this.init_debug();
   },
 };
 
