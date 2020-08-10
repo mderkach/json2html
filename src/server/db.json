@@ -45,10 +45,15 @@
                                     "text": "30"
                                  },
                                  {
-                                    "type": "checkbox",
+                                    "type": "radio",
                                     "name": "force1",
-                                    "label": "Взимать",
+                                    "label": "Взимать со всех",
                                     "value": true
+                                 },
+                                 {
+                                    "type": "radio",
+                                    "name": "force1",
+                                    "label": "Не взиманть ни с кого"
                                  }
                               ]
                            }

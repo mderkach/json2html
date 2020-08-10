@@ -57,6 +57,8 @@ const html = {
         return html.renderButtonGroup(temp, data);
       case 'checkbox':
         return html.renderCheckbox(temp, data);
+      case 'radio':
+        return html.renderRadio(temp, data);
       // tabs
       case 'tabs':
         return html.renderTabs(temp, data);
@@ -267,6 +269,36 @@ const html = {
 
     return upperDiv;
   },
+  renderRadio: function (childs, data) {
+    const upperDiv = this.renderAny(childs, data, 'div', false, false);
+    upperDiv.classList.add('form-check');
+
+    const label = document.createElement('label');
+    const input = document.createElement('input');
+
+    label.classList.add('form-check-label');
+    input.classList.add('form-check-input');
+    input.setAttribute('type', 'radio');
+
+    label.appendChild(input);
+    if (data.value) {
+      input.value = data.value;
+    }
+
+    if (data.name) {
+      input.name = data.name;
+    }
+
+    if (data.label) {
+      const labelText = document.createElement('span');
+      labelText.innerHTML = data.label;
+      label.appendChild(labelText);
+    }
+
+    upperDiv.appendChild(label);
+
+    return upperDiv;
+  },
   renderInput: function (childs, data) {
     const formInp = this.renderAny(childs, data, 'input', false, false);
     formInp.className = 'form-control';
@@ -338,10 +370,6 @@ const html = {
     const BtnGrp = this.renderAny(childs, data, 'div', true, false);
     BtnGrp.classList.add('btn-group');
     BtnGrp.setAttribute('role', 'group');
-
-    for (let i = 0; i < childs.length; i += 1) {
-      BtnGrp.appendChild(childs[i]);
-    }
 
     return BtnGrp;
   },

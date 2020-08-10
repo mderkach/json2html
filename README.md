@@ -132,16 +132,17 @@ Allows you to group several buttons into a single block
 }
 ```
 
-#### Checkbox
+#### Checkboxes and Radio buttons
 ```c
 {
+    // "checkbox" or "radio"
     "type": "checkbox",
     // text to the right of the checkbox
     "label": "Click me",
     // name inside HTML form
     "name": "check1",
     // checked or not (boolean)
-    "value": true,
+    "value": true
 }
 ```
 
