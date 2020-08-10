@@ -55,6 +55,8 @@ const html = {
         return html.renderButton(temp, data, 'reset');
       case 'button-group':
         return html.renderButtonGroup(temp, data);
+      case 'checkbox':
+        return html.renderCheckbox(temp, data);
       // tabs
       case 'tabs':
         return html.renderTabs(temp, data);
@@ -235,6 +237,36 @@ const html = {
 
     return formWr;
   },
+  renderCheckbox: function (childs, data) {
+    const upperDiv = this.renderAny(childs, data, 'div', false, false);
+    upperDiv.classList.add('form-check');
+
+    const label = document.createElement('label');
+    const input = document.createElement('input');
+
+    label.classList.add('form-check-label');
+    input.classList.add('form-check-input');
+    input.setAttribute('type', 'checkbox');
+
+    label.appendChild(input);
+    if (data.value) {
+      input.value = data.value;
+    }
+
+    if (data.name) {
+      input.name = data.name;
+    }
+
+    if (data.label) {
+      const labelText = document.createElement('span');
+      labelText.innerHTML = data.label;
+      label.appendChild(labelText);
+    }
+
+    upperDiv.appendChild(label);
+
+    return upperDiv;
+  },
   renderInput: function (childs, data) {
     const formInp = this.renderAny(childs, data, 'input', false, false);
     formInp.className = 'form-control';
@@ -259,6 +291,11 @@ const html = {
       group.appendChild(formInp);
 
       return group;
+    }
+
+    // input-type
+    if (data['input-type']) {
+      formInp.setAttribute('type', data['input-type']);
     }
 
     return formInp;

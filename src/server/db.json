@@ -40,8 +40,15 @@
                               "children": [
                                  {
                                     "type": "input",
+                                    "input-type": "number",
                                     "name": "tax1",
                                     "text": "30"
+                                 },
+                                 {
+                                    "type": "checkbox",
+                                    "name": "force1",
+                                    "label": "Взимать",
+                                    "value": true
                                  }
                               ]
                            }
@@ -59,6 +66,7 @@
                               "children": [
                                  {
                                     "type": "input",
+                                    "input-type": "number",
                                     "name": "tax2",
                                     "text": "40"
                                  }
